@@ -1,0 +1,41 @@
+version: "3.7"
+volumes:
+    data:
+        name: ifttt
+services:
+    tester:
+        build: tester
+        volumes:
+            - ./tester:/usr/src/app
+        ports:
+            - "127.0.0.1:8079:8080"
+        tty: true
+        depends_on:
+            - sensor
+            - switch
+            - server
+
+    switch:
+        build: switch
+        volumes:
+            - ./switch:/usr/src/app
+        ports:
+            - "127.0.0.1:8080:8080"
+        tty: true
+
+    sensor:
+        build: sensor
+        volumes:
+            - ./sensor:/usr/src/app
+        ports:
+            - "127.0.0.1:8081:8080"
+        tty: true
+
+    server:
+        build: server
+        volumes:
+            - ./server:/usr/src/app
+        ports:
+            - "127.0.0.1:8082:8080"
+        tty: true
+
