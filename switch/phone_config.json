@@ -1,0 +1,29 @@
+{
+    "rules": [
+        {
+            "output": 1,
+            "conditions": [
+                {
+                    "datapoint": "avg_temp",
+                    "operand": "<",
+                    "value": 70,
+                }
+            ]
+        },
+        {
+            "output": 1,
+            "conditions": [
+                {
+                    "datapoint": "avg_temp",
+                    "operand": ">",
+                    "value": 80,
+                },
+                {
+                    "datapoint": "dist",
+                    "operand": "<",
+                    "value": 1,
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "computations": [
+        {
+            "type": "avg",
+            "datapoints": ["sensor1", "sensor3"],
+            "name": "avg_temp",
+            "output": ["switch1"]
+        },
+        {
+            "type": "ident",
+            "datapoint": "sensor1",
+            "output": ["switch1"]
+        },
+    ]
+}
