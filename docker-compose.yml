@@ -4,7 +4,7 @@ volumes:
         name: ifttt
 services:
     tester:
-        build: tester
+        image: ifttt_tester
         volumes:
             - ./tester:/usr/src/app
         ports:
@@ -16,7 +16,7 @@ services:
             - server
 
     switch:
-        build: switch
+        image: ifttt_switch
         volumes:
             - ./switch:/usr/src/app
         ports:
@@ -24,15 +24,18 @@ services:
         tty: true
 
     sensor:
-        build: sensor
+        image: ifttt_sensor
         volumes:
             - ./sensor:/usr/src/app
         ports:
             - "127.0.0.1:8081:8080"
+        deploy:
+            mode: replicated
+            replicas: 3
         tty: true
 
     server:
-        build: server
+        image: ifttt_server
         volumes:
             - ./server:/usr/src/app
         ports:
