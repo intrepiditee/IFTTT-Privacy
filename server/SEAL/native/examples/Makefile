@@ -48,10 +48,10 @@ RM = /usr/local/Cellar/cmake/3.15.4/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/SEAL/native/examples"
+CMAKE_SOURCE_DIR = "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/examples"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/SEAL/native/examples"
+CMAKE_BINARY_DIR = "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/examples"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/SEAL/native/examples/CMakeFiles" "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/SEAL/native/examples/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/examples/CMakeFiles" "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/examples/CMakeFiles/progress.marks"
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/SEAL/native/examples/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/examples/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target

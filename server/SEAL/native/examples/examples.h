@@ -23,6 +23,8 @@
 std::string subs(std::shared_ptr<seal::SEALContext> context, seal::Ciphertext a, seal::Ciphertext b);
 std::string subs_from_file(std::shared_ptr<seal::SEALContext> context, std::string a_filename, std::string b_filename);
 
+std::string add_from_file_vector(std::shared_ptr<seal::SEALContext> context, const std::vector<std::string> &filename);
+
 std::string encrypt_value(std::shared_ptr<seal::SEALContext> context, std::string a);
 
 std::string decrypt_value(std::shared_ptr<seal::SEALContext> context, std::string cipher);

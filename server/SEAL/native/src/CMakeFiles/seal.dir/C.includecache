@@ -1,0 +1,52 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2-impl.h
+stdint.h
+-
+string.h
+-
+
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2.h
+stddef.h
+-
+stdint.h
+-
+
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2b.c
+stdint.h
+-
+string.h
+-
+stdio.h
+-
+blake2.h
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2.h
+blake2-impl.h
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2-impl.h
+string.h
+-
+blake2-kat.h
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2-kat.h
+
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2xb.c
+stdint.h
+-
+string.h
+-
+stdio.h
+-
+blake2.h
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2.h
+blake2-impl.h
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2-impl.h
+string.h
+-
+blake2-kat.h
+/Users/manumaheshwari/Desktop/Fall 2019/COMP 536/project/IFTTT-Privacy/server/SEAL/native/src/seal/util/blake2-kat.h
+

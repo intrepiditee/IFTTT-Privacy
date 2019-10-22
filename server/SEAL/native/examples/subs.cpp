@@ -37,7 +37,6 @@ std::string subs(shared_ptr<SEALContext> context, Ciphertext a, Ciphertext b)
 **/
 std::string subs_from_file(shared_ptr<SEALContext> context, string a_filename, string b_filename)
 {
-	//cout << a_filename + b_filename << "Inside the library Function" << endl;
 	// Create Ciphertext object from filename
 	Ciphertext a;
 	filebuf cipher_a_fbi;
@@ -64,15 +63,36 @@ std::string subs_from_file(shared_ptr<SEALContext> context, string a_filename, s
 	
     Ciphertext result;
     evaluator.sub(a, b, result);
-	
-	// Write the output to the file
-//	filebuf fb;
-//	fb.open ("test.txt",ios::out);
-//	
-//	ostream os(&fb);
-//	result.save(os);
-//	
+
   	ostringstream oss;
+	result.save(oss);
+	
+	return oss.str();
+
+}
+
+std::string add_from_file_vector(shared_ptr<SEALContext> context, const vector<string> &filenames) {
+
+	
+	Ciphertext result;
+
+	Evaluator evaluator(context);
+	vector<Ciphertext> ct_vec;
+	for (string i : filenames) {
+		
+		Ciphertext a;
+		filebuf cipher_a_fbi;
+		if (cipher_a_fbi.open (i, ios::in)){
+			istream cipher_a_is(&cipher_a_fbi);
+			a.unsafe_load(context, cipher_a_is);
+		}
+		
+		ct_vec.push_back(a);
+		
+	}
+	
+	evaluator.add_many(ct_vec, result);
+	ostringstream oss;
 	result.save(oss);
 	
 	return oss.str();

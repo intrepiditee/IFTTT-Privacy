@@ -219,6 +219,15 @@ int main(int argc, char *argv[])
 			cout << encrypt_value(context, plain) << endl;		
 			break;
 		}
+		case 4: {
+			// Add multiple numbers
+			vector<string> vec;
+			for (size_t i = 0; i < argc - 2; i++) {
+				vec.push_back(argv[2+i]);
+			}
+			cout << add_from_file_vector(context, vec);
+			break;
+		}	
 	}
 
 	return 0;
