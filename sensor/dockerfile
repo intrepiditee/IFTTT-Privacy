@@ -7,4 +7,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["python", "sensor.py"]
+RUN (apt-get update -y && \
+	apt-get install -y cmake && \
+	cd SEAL/native/src && \
+	cmake . && \
+	make && \
+	cd ../.. && \
+	cd native/examples && \
+	cmake . && \
+	make && \
+	cd ../..)
+
+
+
+CMD ["bash"]

@@ -2,9 +2,12 @@ version: "3.7"
 volumes:
     data:
         name: ifttt
+    
 services:
     tester:
-        image: ifttt_tester
+        build:
+            context: ./tester
+            dockerfile: dockerfile
         volumes:
             - ./tester:/usr/src/app
         ports:
@@ -16,7 +19,9 @@ services:
             - server
 
     switch:
-        image: ifttt_switch
+        build:
+            context: ./switch
+            dockerfile: dockerfile
         volumes:
             - ./switch:/usr/src/app
         ports:
@@ -24,18 +29,19 @@ services:
         tty: true
 
     sensor:
-        image: ifttt_sensor
+        build:
+            context: ./sensor
+            dockerfile: dockerfile
         volumes:
             - ./sensor:/usr/src/app
         ports:
-            - "127.0.0.1:8081:8080"
-        deploy:
-            mode: replicated
-            replicas: 3
+            - "8080"
         tty: true
-
+        
     server:
-        image: ifttt_server
+        build:
+            context: ./server
+            dockerfile: dockerfile
         volumes:
             - ./server:/usr/src/app
         ports:
