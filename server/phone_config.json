@@ -14,8 +14,11 @@
             "datapoint": "sensor1",
             "output": ["switch1"]
         }
+    ],
+    "switches": [
+        {
+            "name": "switch1",
+            "address": "http://ifttt_switch_1:8080/update"
+        }
     ]
 }
-
-
-
