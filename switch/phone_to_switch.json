@@ -1,27 +1,29 @@
 {
     "rules": [
         {
+            "rule_id": 0,
             "output": 1,
             "conditions": [
                 {
-                    "datapoint": "avg_temp",
+                    "name": "avg_temp",
                     "operand": "<",
-                    "value": 70,
+                    "value": 70
                 }
             ]
         },
         {
+            "rule_id": 1,
             "output": 1,
             "conditions": [
                 {
-                    "datapoint": "avg_temp",
+                    "name": "avg_temp",
                     "operand": ">",
-                    "value": 80,
+                    "value": 80
                 },
                 {
-                    "datapoint": "dist",
+                    "name": "dist",
                     "operand": "<",
-                    "value": 1,
+                    "value": 1
                 }
             ]
         }

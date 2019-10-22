@@ -1,15 +1,21 @@
 {
     "computations": [
         {
+            "rule_id": 1,
             "type": "avg",
             "datapoints": ["sensor1", "sensor3"],
             "name": "avg_temp",
             "output": ["switch1"]
         },
         {
+            "rule_id": 1,
             "type": "ident",
+            "name": "dist",
             "datapoint": "sensor1",
             "output": ["switch1"]
-        },
+        }
     ]
 }
+
+
+
