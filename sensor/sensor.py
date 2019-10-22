@@ -6,6 +6,7 @@ import time
 
 app = Flask(__name__)
 
+
 @app.route("/send", methods=['POST'])
 def handle_send():
     data = request.form['data']
@@ -19,14 +20,19 @@ def hello():
     return "I am a sensor!"
 
 
+def read_hostname():
+    return raw_input("Enter hostname: ")
+
 def main():
-    filename = 'ifttt_sensor_1'
+    
+    hostname = read_hostname()
+
     while True:
         data = random.randrange(60, 80)
-        encrypt(data, filename)
-        files = [('file', open(filename, 'rb'))]
+        encrypt(data, hostname)
+        files = [('file', open(hostname, 'rb'))]
         requests.post("http://ifttt_server_1:8080/upload", files=files)
-        time.sleep(2)
+        time.sleep(5)
 
     # app.run(host="0.0.0.0", port=8080)
 
