@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:2
 
 WORKDIR /usr/src/app
 
@@ -7,17 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN (apt-get update -y && \
-	apt-get install -y cmake && \
-	cd SEAL/native/src && \
-	cmake . && \
-	make && \
-	cd ../.. && \
-	cd native/examples && \
-	cmake . && \
-	make && \
-	cd ../..)
-
-
-
-CMD ["bash"]
+CMD ["python2", "sensor.py"]
