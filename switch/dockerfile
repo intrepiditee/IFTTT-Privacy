@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:2
 
 WORKDIR /usr/src/app
 
@@ -9,4 +9,4 @@ RUN apt install zlib1g
 
 COPY . .
 
-CMD ["python", "switch.py"]
+CMD ["python2", "switch.py"]

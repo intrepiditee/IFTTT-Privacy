@@ -1,7 +1,6 @@
 {
     "rules": [
         {
-            "rule_id": 0,
             "output": 1,
             "conditions": [
                 {
@@ -12,7 +11,6 @@
             ]
         },
         {
-            "rule_id": 1,
             "output": 1,
             "conditions": [
                 {
