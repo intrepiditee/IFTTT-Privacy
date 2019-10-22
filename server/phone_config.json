@@ -1,17 +1,41 @@
 {
     "computations": [
         {
-            "rule_id": 1,
-            "type": "avg",
-            "datapoints": ["sensor1", "sensor3"],
+            "type": "+",
+            "datapoints": ["1"],
             "name": "avg_temp",
             "output": ["switch1"]
         },
         {
-            "rule_id": 1,
+            "type": "-",
+            "datapoints": ["1", "1"],
+            "name": "diff",
+            "output": ["switch1"]
+        },
+        {
+            "type": "*",
+            "datapoints": ["1", "1"],
+            "name": "prod",
+            "output": ["switch1"]
+        },
+        {
             "type": "ident",
             "name": "dist",
-            "datapoint": "sensor1",
+            "datapoint": "1",
+            "output": ["switch1"]
+        },
+        {
+            "type": "rate",
+            "num": 10,
+            "name": "rate",
+            "datapoint": "1",
+            "output": ["switch1"]
+        },
+        {
+            "type": "run_sum",
+            "num": 10,
+            "name": "run_sum",
+            "datapoint": "1",
             "output": ["switch1"]
         }
     ],
