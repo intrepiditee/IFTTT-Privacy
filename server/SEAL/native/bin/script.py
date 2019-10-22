@@ -35,8 +35,11 @@ def subtract_two_files(filename_a, filename_b):
 	return filename
 
 def add_multiple(arr):
+	in_arr = ["./sealexamples", "4"]
+	in_arr.extend(arr)
+	print in_arr
 	filename = "result_add_multiple" + str(time.time()) + ".txt"
-	p = subprocess.Popen(["./sealexamples", "4", arr[0], arr[1], arr[2]], stdout=subprocess.PIPE)
+	p = subprocess.Popen(in_arr, stdout=subprocess.PIPE)
 	f = open(filename, "w+")
 	f.write(p.communicate()[0])	
 	#print p.communicate()[0]
@@ -48,6 +51,7 @@ def add_multiple(arr):
 a = encrypt_to_file("A");
 b = encrypt_to_file("F");
 c = encrypt_to_file("F");
+d = encrypt_to_file("F");
 
 #a = "opA1571758416.06.txt" 
 #b = "opF1571758416.14.txt" 
@@ -63,6 +67,6 @@ decrypt_from_file(b);
 #print add_multiple([a, b, c])
 #decrypt_from_file("result_add_multiple1571760146.18.txt");
 #decrypt_from_file(subtract_two_files(a, b))
-decrypt_from_file(add_multiple([a, b, c]));
+decrypt_from_file(add_multiple([a, b, c, d]));
 
 	
