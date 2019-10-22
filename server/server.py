@@ -26,11 +26,11 @@ class Computation():
     def __init__(self, config):
         self.computation_type = config["type"]
         if config["type"] == "ident":
-            self.datapoints = [[config["datapoint"]]]
+            self.datapoints = [config["datapoint"]]
             self.name = config["datapoint"]
         elif config["type"] == "rate" or config["type"] == "run_sum":
             self.num = config["num"]
-            self.datapoints = [[config["datapoint"]]]
+            self.datapoints = [config["datapoint"]]
         else:
             self.datapoints = config["datapoints"]
             self.name = config["name"]
@@ -63,7 +63,7 @@ class Computation():
             return result
 
     def __str__(self):
-        return self.computation_type + "(" + ",".join(self.datapoints) + ")" + ("" if self.computation_type != "rate" and self.computation_type != "run_sum" else "(" + str(self.num) + ")")"->" + self.output
+        return self.computation_type + "(" + ",".join(self.datapoints) + ")" + ("" if self.computation_type != "rate" and self.computation_type != "run_sum" else "(" + str(self.num) + ")") + "->" + ",".join(self.output)
 
 class Server():
     def __init__(self, config):
@@ -76,7 +76,7 @@ class Server():
                     self.switch_to_datapoints[switch].add(computation_config["name"])
                 else:
                     self.switch_to_datapoints[switch].add(computation_config["datapoint"])
-        for computation in computations:
+        for computation in self.computations:
             for datapoint in computation.datapoints:
                 self.sensor_to_computations[datapoint].add(computation)
         self.data_cache = DataCache(100)
@@ -99,7 +99,8 @@ class Server():
             self.update_switch(switch)
 
 def load_config():
-    data = json.load("phone_config.json")
+    with open("phone_config.json") as json_file:
+        data = json.load(json_file)
     return data
 
 server = Server(load_config())
