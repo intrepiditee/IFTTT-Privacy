@@ -4,6 +4,8 @@ from collections import defaultdict, deque
 from homomorphic_computations import *
 import json
 import itertools
+import time
+import os
 
 data_cache = defaultdict(lambda: deque([0] * 100, 100))
 
@@ -39,7 +41,11 @@ class Computation():
 
     def compute(self, data_cache):
         for dp in self.datapoints:
-            if not self.data_cache.has_value(dp):
+            if not data_cache.has_value(dp):
+                print("ERROR: value not in data cache:", dp)
+                return None
+            elif data_cache.get_value(dp) == None:
+                print("ERROR: value not in data cache:", dp)
                 return None
         if self.computation_type == "ident":
             return data_cache.get_value(self.datapoints[0])
@@ -57,14 +63,20 @@ class Computation():
             return result
         elif self.computation_type == "rate":
             data = data_cache.get_range(self.datapoints[0], self.num)
+            if data[0] == None or data[1] == None:
+                return None
             result = h_diff(data[1], data[0])
             for i in range(1, len(data) - 1):
+                if data[i+1] == None:
+                    return None
                 result = h_sum(result, h_diff(data[i+1], data[i]))
             return result
         elif self.computation_type == "run_sum":
             data = data_cache.get_range(self.datapoints[0], self.num)
             result = data[0]
             for i in range(1, len(data)):
+                if data[i] == None:
+                    break
                 result = h_sum(result, data[i])
             return result
         else:
@@ -92,15 +104,20 @@ class Server():
     def update_switch(self, switch):
         print("Updating switch", switch, "w/ data", ",".join(self.switch_to_datapoints[switch]))
         for dp in self.switch_to_datapoints[switch]:
-            if not self.data_cache.has_value(dp):
-                print("ERROR: failed sending to switch", switch, ", not enough data")
-        files = [('file', open(self.data_cache.get_value(datapoint), 'rb')) for datapoint in self.switch_to_datapoints[switch]]
+            if not self.data_cache.has_value(dp) or not self.data_cache.get_value(dp):
+                print("ERROR: failed sending to switch", switch, ", not enough data, missing", dp)
+                continue
+            os.rename(self.data_cache.get_value(dp), dp)
+        files = [('file', open(datapoint, 'rb')) for datapoint in self.switch_to_datapoints[switch]]
         requests.post(self.switch_to_address[switch], files=files)
 
     def process_data(self, sensor, value):
+        print("Processing data from", sensor)
         self.data_cache.add_value(sensor, value)
         affected_switches = set([])
         for computation in self.sensor_to_computations[sensor]:
+            print("Computing", str(computation))
+            print(os.listdir("."))
             result = computation.compute(self.data_cache)
             if result:
                 self.data_cache.add_value(computation.name, computation.compute(self.data_cache))
@@ -120,20 +137,28 @@ def load_config():
 server = Server(load_config())
 
 def get_filename(sensor):
-    return sensor + "_" + int(time.time())
+    return sensor + "_" + str(int(time.time()))
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = "."
+
 @app.route("/upload", methods=['POST'])
 def handle_upload():
-    sensor = request.form['sensor']
+    print("Received Upload", request.form)
     if "file" not in request.files:
+        print("ERROR: missing file")
         return Response(json.dumps({"error": "missing file"}), status=400)
 
     files = request.files.getlist("file")
-    data = get_filename()
-    files[0].save(data)
+    sensor = files[0].filename
+    filename = get_filename(sensor)
+    files[0].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    print("Saving", filename)
+    time.sleep(5)
+    print("Saved", filename)
+    print(os.listdir("."))
 
-    server.process_data(sensor, data)
+    server.process_data(sensor, filename)
     return "Recieved"
 
 @app.route("/")

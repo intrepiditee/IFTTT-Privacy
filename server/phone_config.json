@@ -2,40 +2,40 @@
     "computations": [
         {
             "type": "+",
-            "datapoints": ["1"],
+            "datapoints": ["ifttt_sensor_1"],
             "name": "avg_temp",
             "output": ["switch1"]
         },
         {
             "type": "-",
-            "datapoints": ["1", "1"],
+            "datapoints": ["ifttt_sensor_1", "ifttt_sensor_1"],
             "name": "diff",
             "output": ["switch1"]
         },
         {
             "type": "*",
-            "datapoints": ["1", "1"],
+            "datapoints": ["ifttt_sensor_1", "ifttt_sensor_1"],
             "name": "prod",
             "output": ["switch1"]
         },
         {
             "type": "ident",
             "name": "dist",
-            "datapoint": "1",
+            "datapoint": "ifttt_sensor_1",
             "output": ["switch1"]
         },
         {
             "type": "rate",
             "num": 10,
             "name": "rate",
-            "datapoint": "1",
+            "datapoint": "ifttt_sensor_1",
             "output": ["switch1"]
         },
         {
             "type": "run_sum",
             "num": 10,
             "name": "run_sum",
-            "datapoint": "1",
+            "datapoint": "ifttt_sensor_1",
             "output": ["switch1"]
         }
     ],
