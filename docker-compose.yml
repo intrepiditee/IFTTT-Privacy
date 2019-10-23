@@ -4,19 +4,19 @@ volumes:
         name: ifttt
     
 services:
-    tester:
-        build:
-            context: ./tester
-            dockerfile: dockerfile
-        volumes:
-            - ./tester:/usr/src/app
-        ports:
-            - "127.0.0.1:8079:8080"
-        tty: true
-        depends_on:
-            - sensor
-            - switch
-            - server
+    # tester:
+    #     build:
+    #         context: ./tester
+    #         dockerfile: dockerfile
+    #     volumes:
+    #         - ./tester:/usr/src/app
+    #     ports:
+    #         - "127.0.0.1:8079:8080"
+    #     tty: true
+    #     depends_on:
+    #         - sensor
+    #         - switch
+    #         - server
 
     switch:
         build:
@@ -28,6 +28,7 @@ services:
             - "127.0.0.1:8080:8080"
         tty: true
 
+
     sensor:
         build:
             context: ./sensor
@@ -37,6 +38,7 @@ services:
         ports:
             - "8080"
         tty: true
+        stdin_open: true
         
     server:
         build:
