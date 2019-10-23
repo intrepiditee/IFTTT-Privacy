@@ -73,7 +73,6 @@ std::string subs_from_file(shared_ptr<SEALContext> context, string a_filename, s
 
 std::string add_from_file_vector(shared_ptr<SEALContext> context, const vector<string> &filenames) {
 
-	
 	Ciphertext result;
 
 	Evaluator evaluator(context);
@@ -96,7 +95,6 @@ std::string add_from_file_vector(shared_ptr<SEALContext> context, const vector<s
 	result.save(oss);
 	
 	return oss.str();
-
 }
 
 string encrypt_value(shared_ptr<SEALContext> context, string a) {

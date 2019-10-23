@@ -26,7 +26,7 @@ def handle_update():
             return Response(json.dumps({'error': 'missing file'}), status=400)
 
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-    
+
 
     names = sorted([file.filename for file in files])
     key = "-".join(names)

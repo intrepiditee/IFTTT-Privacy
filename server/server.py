@@ -112,7 +112,7 @@ class Server():
                 f.write(self.data_cache.get_value(dp).read())
         files = [('file', open(datapoint, 'rb')) for datapoint in self.switch_to_datapoints[switch]]
 
-        print(files[0][1].read())
+        # print(files[0][1].read())
         requests.post(self.switch_to_address[switch], files=files)
 
     def process_data(self, sensor, value):
@@ -154,8 +154,9 @@ def handle_upload():
 
     files = request.files.getlist("file")
     sensor = files[0].filename
-    #filename = get_filename(sensor)
-    #files[0].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    # filename = get_filename(sensor)
+    # files[0].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
     """
     print("Saving", filename)
     time.sleep(5)

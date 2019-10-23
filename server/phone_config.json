@@ -1,9 +1,9 @@
 {
     "computations": [
         {
-            "type": "ident",
+            "type": "+",
+            "datapoints": ["ifttt_sensor_1", "ifttt_sensor_2", "ifttt_sensor_3"],
             "name": "avg_temp",
-            "datapoint": "ifttt_sensor_1",
             "output": ["switch1"]
         }
     ],
