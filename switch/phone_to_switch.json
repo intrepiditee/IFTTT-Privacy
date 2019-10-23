@@ -1,12 +1,17 @@
 {
     "rules": [
         {
-            "output": 1,
+            "output": 0,
             "conditions": [
                 {
                     "name": "avg_temp",
                     "operand": "<",
                     "value": 70
+                },
+                {
+                    "name": "dist",
+                    "operand": "<",
+                    "value": 1
                 }
             ]
         },
@@ -17,11 +22,6 @@
                     "name": "avg_temp",
                     "operand": ">",
                     "value": 80
-                },
-                {
-                    "name": "dist",
-                    "operand": "<",
-                    "value": 1
                 }
             ]
         }

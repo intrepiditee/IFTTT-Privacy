@@ -1,6 +1,7 @@
 from flask import Flask, request, Response
 from rule import Condition, Rule
 from decrypt import decrypt
+import time
 import requests
 import json
 import os
@@ -24,7 +25,7 @@ def handle_update():
         if file.filename == '':
             return Response(json.dumps({'error': 'missing file'}), status=400)
 
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
     
 
     names = sorted([file.filename for file in files])
@@ -34,10 +35,11 @@ def handle_update():
     data = {}
     for name in names:
         data[name] = decrypt(name)
+        print(name, data[name])
 
     rule = RULES[key]    
     if rule.evaluate(data):
-        print("State changed to " + str(rule.output()))    
+        print("State changed to " + str(rule.get_output()))    
 
     return Response(status=200)
 

@@ -2,7 +2,7 @@
     "computations": [
         {
             "type": "ident",
-            "name": "dist",
+            "name": "avg_temp",
             "datapoint": "ifttt_sensor_1",
             "output": ["switch1"]
         }

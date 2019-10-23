@@ -27,15 +27,15 @@ class Rule:
             whether all conditions evaluate to true
         '''
         for condition in self.conditions:
-            if condition.name not in data:
+            if condition not in data:
                 return False
 
-            if not condition.evaluate(data[condition.name]):
+            if not self.conditions[condition].evaluate(data[condition]):
                 return False
 
         return True
 
-    def output(self):
+    def get_output(self):
         '''
         Returns
         -------
