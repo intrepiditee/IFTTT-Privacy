@@ -6,6 +6,7 @@ import json
 import itertools
 import time
 import os
+import io
 
 data_cache = defaultdict(lambda: deque([0] * 100, 100))
 
@@ -107,8 +108,11 @@ class Server():
             if not self.data_cache.has_value(dp) or not self.data_cache.get_value(dp):
                 print("ERROR: failed sending to switch", switch, ", not enough data, missing", dp)
                 continue
-            os.rename(self.data_cache.get_value(dp), dp)
+            with open(dp, 'wb+') as f:
+                f.write(self.data_cache.get_value(dp).read())
         files = [('file', open(datapoint, 'rb')) for datapoint in self.switch_to_datapoints[switch]]
+
+        print(files[0][1].read())
         requests.post(self.switch_to_address[switch], files=files)
 
     def process_data(self, sensor, value):
@@ -117,7 +121,6 @@ class Server():
         affected_switches = set([])
         for computation in self.sensor_to_computations[sensor]:
             print("Computing", str(computation))
-            print(os.listdir("."))
             result = computation.compute(self.data_cache)
             if result:
                 self.data_cache.add_value(computation.name, computation.compute(self.data_cache))
@@ -151,14 +154,18 @@ def handle_upload():
 
     files = request.files.getlist("file")
     sensor = files[0].filename
-    filename = get_filename(sensor)
-    files[0].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    #filename = get_filename(sensor)
+    #files[0].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    """
     print("Saving", filename)
     time.sleep(5)
     print("Saved", filename)
     print(os.listdir("."))
+    """
 
-    server.process_data(sensor, filename)
+    filedata = io.BytesIO(files[0].read())
+
+    server.process_data(sensor, filedata)
     return "Recieved"
 
 @app.route("/")

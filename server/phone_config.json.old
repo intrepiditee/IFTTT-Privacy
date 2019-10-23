@@ -1,0 +1,48 @@
+{
+    "computations": [
+        {
+            "type": "+",
+            "datapoints": ["ifttt_sensor_1"],
+            "name": "avg_temp",
+            "output": ["switch1"]
+        },
+        {
+            "type": "-",
+            "datapoints": ["ifttt_sensor_1", "ifttt_sensor_1"],
+            "name": "diff",
+            "output": ["switch1"]
+        },
+        {
+            "type": "*",
+            "datapoints": ["ifttt_sensor_1", "ifttt_sensor_1"],
+            "name": "prod",
+            "output": ["switch1"]
+        },
+        {
+            "type": "ident",
+            "name": "dist",
+            "datapoint": "ifttt_sensor_1",
+            "output": ["switch1"]
+        },
+        {
+            "type": "rate",
+            "num": 10,
+            "name": "rate",
+            "datapoint": "ifttt_sensor_1",
+            "output": ["switch1"]
+        },
+        {
+            "type": "run_sum",
+            "num": 10,
+            "name": "run_sum",
+            "datapoint": "ifttt_sensor_1",
+            "output": ["switch1"]
+        }
+    ],
+    "switches": [
+        {
+            "name": "switch1",
+            "address": "http://ifttt_switch_1:8080/update"
+        }
+    ]
+}
