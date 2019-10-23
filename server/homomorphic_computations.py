@@ -15,7 +15,7 @@ def cache_bytesio(bio):
 def h_sum(a, b):
     print('+', a, b, type(a), type(b))
     filename1, filename2 = cache_bytesio(a), cache_bytesio(b)
-    p = subprocess.Popen(["./sealexamples", "1", filename1, filename2], stdout=subprocess.PIPE)
+    p = subprocess.Popen(["./sealexamples", "4", filename1, filename2], stdout=subprocess.PIPE)
     b = BytesIO()
     b.write(p.communicate()[0])
     return b
@@ -28,10 +28,10 @@ def h_diff(a, b):
     b.write(p.communicate()[0])
     return b
 
-def h_prod(a, b):
-    print('*', a, b, type(a), type(b))
-    filename1, filename2 = cache_bytesio(a), cache_bytesio(b)
-    p = subprocess.Popen(["./sealexamples", "1", filename1, filename2], stdout=subprocess.PIPE)
-    b = BytesIO()
-    b.write(p.communicate()[0])
-    return b
+# def h_prod(a, b):
+#     print('*', a, b, type(a), type(b))
+#     filename1, filename2 = cache_bytesio(a), cache_bytesio(b)
+#     p = subprocess.Popen(["./sealexamples", "1", filename1, filename2], stdout=subprocess.PIPE)
+#     b = BytesIO()
+#     b.write(p.communicate()[0])
+#     return b
