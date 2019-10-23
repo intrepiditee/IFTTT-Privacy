@@ -20,7 +20,8 @@ def handle_update():
         return Response(json.dumps({'error': 'missing file'}), status=400)
 
     files = request.files.getlist('file')
-
+    print(files)
+    
     for file in files:
         if file.filename == '':
             return Response(json.dumps({'error': 'missing file'}), status=400)

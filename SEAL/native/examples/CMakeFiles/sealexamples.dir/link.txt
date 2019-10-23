@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/sealexamples.dir/examples.cpp.o CMakeFiles/sealexamples.dir/subs.cpp.o  -o /usr/src/app/SEAL/native/bin/sealexamples /usr/src/app/SEAL/native/lib/libseal-3.4.a -pthread /usr/lib/x86_64-linux-gnu/libz.so 

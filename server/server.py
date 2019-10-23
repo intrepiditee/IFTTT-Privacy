@@ -51,10 +51,20 @@ class Computation():
         if self.computation_type == "ident":
             return data_cache.get_value(self.datapoints[0])
         elif self.computation_type == "+":
-            result = data_cache.get_value(self.datapoints[0])
-            for i in range(1, len(self.datapoints)):
-                result = h_sum(result, data_cache.get_value(self.datapoints[0]))
+            # result = data_cache.get_value(self.datapoints[0])
+            # for i in range(1, len(self.datapoints)):
+                # result = h_sum(result, data_cache.get_value(self.datapoints[i]))
+            f1 = data_cache.get_value(self.datapoints[0])
+            f2 = data_cache.get_value(self.datapoints[1])
+            f3 = data_cache.get_value(self.datapoints[2])
+
+            try:
+                result = h_sum(f1, f2, f3)
+            except IOError:
+                print("Failed")
+                return None
             return result
+
         elif self.computation_type == "-":
             return h_diff(data_cache.get_value(self.datapoints[0]), data_cache.get_value(self.datapoints[0]))
         elif self.computation_type == "*":
@@ -104,15 +114,25 @@ class Server():
 
     def update_switch(self, switch):
         print("Updating switch", switch, "w/ data", ",".join(self.switch_to_datapoints[switch]))
+        failed = False
         for dp in self.switch_to_datapoints[switch]:
             if not self.data_cache.has_value(dp) or not self.data_cache.get_value(dp):
                 print("ERROR: failed sending to switch", switch, ", not enough data, missing", dp)
-                continue
+                failed = True
+                break
             with open(dp, 'wb+') as f:
-                f.write(self.data_cache.get_value(dp).read())
+                data = self.data_cache.get_value(dp).read()
+                if len(data) < 10:
+                    print("Empty")
+                    failed = True
+                    break
+                f.write(data)
+        if failed:
+            return
         files = [('file', open(datapoint, 'rb')) for datapoint in self.switch_to_datapoints[switch]]
 
         # print(files[0][1].read())
+        print("post to switch")
         requests.post(self.switch_to_address[switch], files=files)
 
     def process_data(self, sensor, value):
@@ -123,7 +143,7 @@ class Server():
             print("Computing", str(computation))
             result = computation.compute(self.data_cache)
             if result:
-                self.data_cache.add_value(computation.name, computation.compute(self.data_cache))
+                self.data_cache.add_value(computation.name, result)
                 for switch in computation.output:
                     affected_switches.add(switch)
             else:
@@ -147,7 +167,6 @@ app.config['UPLOAD_FOLDER'] = "."
 
 @app.route("/upload", methods=['POST'])
 def handle_upload():
-    print("Received Upload", request.form)
     if "file" not in request.files:
         print("ERROR: missing file")
         return Response(json.dumps({"error": "missing file"}), status=400)
@@ -155,7 +174,7 @@ def handle_upload():
     files = request.files.getlist("file")
     sensor = files[0].filename
     # filename = get_filename(sensor)
-    # files[0].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    files[0].save(os.path.join(app.config['UPLOAD_FOLDER'], sensor))
 
     """
     print("Saving", filename)
@@ -164,10 +183,25 @@ def handle_upload():
     print(os.listdir("."))
     """
 
-    filedata = io.BytesIO(files[0].read())
+    if update():
+        files = [('file', open("avg_temp", 'rb'))]
+        requests.post("http://ifttt_switch_1:8080/update", files=files)
 
-    server.process_data(sensor, filedata)
+    # data = files[0].read()
+    # filedata = io.BytesIO(data)
+
+    # server.process_data(sensor, filedata)
     return "Recieved"
+
+
+def update():
+    if os.path.exists("ifttt_sensor_1") and os.path.exists("ifttt_sensor_2") and os.path.exists("ifttt_sensor_3"):
+        sum("ifttt_sensor_1", "ifttt_sensor_2", "ifttt_sensor_3")
+        if os.stat('avg_temp').st_size < 10:
+            return False
+        else:
+            return True
+    return False
 
 @app.route("/")
 def hello():

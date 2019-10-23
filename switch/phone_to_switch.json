@@ -21,7 +21,7 @@
                 {
                     "name": "avg_temp",
                     "operand": ">",
-                    "value": 240
+                    "value": 200
                 }
             ]
         }
