@@ -10,7 +10,8 @@ import io
 
 data_cache = defaultdict(lambda: deque([0] * 100, 100))
 
-class DataCache():
+
+class DataCache:
     def __init__(self, max_items):
         self.data = defaultdict(lambda: deque([None] * 100, 100))
         self.max_items = max_items
@@ -27,7 +28,8 @@ class DataCache():
     def get_value(self, name):
         return self.data[name][-1]
 
-class Computation():
+
+class Computation:
     def __init__(self, config):
         self.computation_type = config["type"]
         if config["type"] == "ident":
@@ -51,18 +53,11 @@ class Computation():
         if self.computation_type == "ident":
             return data_cache.get_value(self.datapoints[0])
         elif self.computation_type == "+":
-            # result = data_cache.get_value(self.datapoints[0])
-            # for i in range(1, len(self.datapoints)):
-                # result = h_sum(result, data_cache.get_value(self.datapoints[i]))
-            f1 = data_cache.get_value(self.datapoints[0])
-            f2 = data_cache.get_value(self.datapoints[1])
-            f3 = data_cache.get_value(self.datapoints[2])
-
-            try:
-                result = h_sum(f1, f2, f3)
-            except IOError:
-                print("Failed")
+            bios = [data_cache.get_value(dp) for dp in self.datapoints if data_cache.has_value(dp)]
+            if len(bios) != len(self.datapoints):
                 return None
+
+            result = h_sum(*bios)
             return result
 
         elif self.computation_type == "-":
@@ -78,9 +73,9 @@ class Computation():
                 return None
             result = h_diff(data[1], data[0])
             for i in range(1, len(data) - 1):
-                if data[i+1] == None:
+                if data[i + 1] == None:
                     return None
-                result = h_sum(result, h_diff(data[i+1], data[i]))
+                result = h_sum(result, h_diff(data[i + 1], data[i]))
             return result
         elif self.computation_type == "run_sum":
             data = data_cache.get_range(self.datapoints[0], self.num)
@@ -94,7 +89,10 @@ class Computation():
             print("ERROR: unknown computation type", self.computation_type)
 
     def __str__(self):
-        return self.computation_type + "(" + ",".join(self.datapoints) + ")" + ("" if self.computation_type != "rate" and self.computation_type != "run_sum" else "(" + str(self.num) + ")") + "->" + ",".join(self.output)
+        return self.computation_type + "(" + ",".join(self.datapoints) + ")" + (
+            "" if self.computation_type != "rate" and self.computation_type != "run_sum" else "(" + str(
+                self.num) + ")") + "->" + ",".join(self.output)
+
 
 class Server():
     def __init__(self, config):
@@ -121,17 +119,12 @@ class Server():
                 failed = True
                 break
             with open(dp, 'wb+') as f:
-                data = self.data_cache.get_value(dp).read()
-                if len(data) < 10:
-                    print("Empty")
-                    failed = True
-                    break
+                data = self.data_cache.get_value(dp).getvalue()
                 f.write(data)
         if failed:
             return
         files = [('file', open(datapoint, 'rb')) for datapoint in self.switch_to_datapoints[switch]]
 
-        # print(files[0][1].read())
         print("post to switch")
         requests.post(self.switch_to_address[switch], files=files)
 
@@ -152,18 +145,23 @@ class Server():
         for switch in affected_switches:
             self.update_switch(switch)
 
+
 def load_config():
     with open("phone_config.json") as json_file:
         data = json.load(json_file)
     return data
 
+
 server = Server(load_config())
+
 
 def get_filename(sensor):
     return sensor + "_" + str(int(time.time()))
 
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "."
+
 
 @app.route("/upload", methods=['POST'])
 def handle_upload():
@@ -173,42 +171,22 @@ def handle_upload():
 
     files = request.files.getlist("file")
     sensor = files[0].filename
-    # filename = get_filename(sensor)
-    files[0].save(os.path.join(app.config['UPLOAD_FOLDER'], sensor))
+    data = files[0].read()
+    filedata = io.BytesIO(data)
 
-    """
-    print("Saving", filename)
-    time.sleep(5)
-    print("Saved", filename)
-    print(os.listdir("."))
-    """
+    server.process_data(sensor, filedata)
 
-    if update():
-        files = [('file', open("avg_temp", 'rb'))]
-        requests.post("http://ifttt_switch_1:8080/update", files=files)
-
-    # data = files[0].read()
-    # filedata = io.BytesIO(data)
-
-    # server.process_data(sensor, filedata)
     return "Recieved"
 
-
-def update():
-    if os.path.exists("ifttt_sensor_1") and os.path.exists("ifttt_sensor_2") and os.path.exists("ifttt_sensor_3"):
-        sum("ifttt_sensor_1", "ifttt_sensor_2", "ifttt_sensor_3")
-        if os.stat('avg_temp').st_size < 10:
-            return False
-        else:
-            return True
-    return False
 
 @app.route("/")
 def hello():
     return "I am the server!"
 
+
 def main():
     app.run(host="0.0.0.0", port=8080)
+
 
 if __name__ == "__main__":
     main()
