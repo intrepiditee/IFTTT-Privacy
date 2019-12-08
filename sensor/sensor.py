@@ -32,6 +32,7 @@ def main():
         encrypt(data, hostname)
         files = [('file', open(hostname, 'rb'))]
         requests.post("http://ifttt_server_1:8080/upload", files=files)
+        print("Post!")
         time.sleep(5)
 
     # app.run(host="0.0.0.0", port=8080)

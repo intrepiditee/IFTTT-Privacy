@@ -5,6 +5,20 @@
             "datapoints": ["ifttt_sensor_1", "ifttt_sensor_2", "ifttt_sensor_3"],
             "name": "avg_temp",
             "output": ["switch1"]
+        },
+        {
+            "type": "rate",
+            "num": 5,
+            "datapoint": "ifttt_sensor_1",
+            "name": "rate_1",
+            "output": ["switch1"]
+        },
+        {
+            "type": "run_sum",
+            "num": 5,
+            "datapoint": "ifttt_sensor_2",
+            "name": "run_sum_2",
+            "output": ["switch1"]
         }
     ],
     "switches": [

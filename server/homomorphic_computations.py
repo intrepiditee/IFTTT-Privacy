@@ -26,10 +26,11 @@ def h_sum(*bios):
     return b
 
 
-def h_diff(a, b):
-    print('-', a, b, type(a), type(b))
-    filename1, filename2 = cache_bytesio(a), cache_bytesio(b)
-    p = subprocess.Popen(["./sealexamples", "1", filename1, filename2], stdout=subprocess.PIPE)
-    b = BytesIO()
-    b.write(p.communicate()[0])
+def h_diff(*bios):
+    filenames = [cache_bytesio(bio) for bio in bios]
+    print(bios)
+    args = ["./sealexamples", "1"] + filenames
+    print(args)
+    p = subprocess.Popen(args, stdout=subprocess.PIPE)
+    b = BytesIO(p.communicate()[0])
     return b
