@@ -1,42 +1,40 @@
-from flask import Flask, request
 from encrypt import encrypt
 import requests
 import random
 import time
-
-app = Flask(__name__)
-
-
-@app.route("/send", methods=['POST'])
-def handle_send():
-    data = request.form['data']
-    print("Received " + data + "!")
-    requests.post("http://ifttt_server_1:8080/upload", data={"sensor": 1, "data": data})
-    print("Sent " + data + "!")
-    return "Recieved"
-
-@app.route("/")
-def hello():
-    return "I am a sensor!"
+import json
 
 
-def read_hostname():
-    return raw_input("Enter hostname: ")
+def get_config():
+    while True:
+        try:
+            response = requests.get('http://ifttt_server_1:8080/configure')
+
+            config = json.loads(response.text)
+            if response.status_code == 200:
+                print(response)
+                print(response.text)
+                return config
+        except requests.exceptions.ConnectionError:
+            time.sleep(0.5)
+
 
 def main():
-    
-    hostname = read_hostname()
+    config = get_config()
+
+    min = config["min"]
+    max = config["max"]
+    interval = config["interval"]
+    name = config["name"]
 
     while True:
-        data = random.randrange(60, 80)
-        encrypt(data, hostname)
-        files = [('file', open(hostname, 'rb'))]
+        data = random.randrange(min, max)
+        encrypt(data, name)
+        files = [('file', open(name, 'rb'))]
         requests.post("http://ifttt_server_1:8080/upload", files=files)
         print("Post!")
-        time.sleep(5)
+        time.sleep(interval)
 
-    # app.run(host="0.0.0.0", port=8080)
 
 if __name__ == "__main__":
     main()
-    

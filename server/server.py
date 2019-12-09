@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 import requests
 from collections import defaultdict, deque
 from homomorphic_computations import *
@@ -7,8 +7,7 @@ import itertools
 import time
 import os
 import io
-
-data_cache = defaultdict(lambda: deque([0] * 100, 100))
+from configurer import Configurer
 
 
 class DataCache:
@@ -94,6 +93,7 @@ class Computation:
                 self.num) + ")") + "->" + ",".join(self.output)
 
 
+
 class Server():
     def __init__(self, config):
         self.sensor_to_computations = defaultdict(set)
@@ -146,21 +146,27 @@ class Server():
             self.update_switch(switch)
 
 
+
+
 def load_config():
     with open("phone_config.json") as json_file:
         data = json.load(json_file)
     return data
 
 
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = "."
+
+
 server = Server(load_config())
+
+configurer = Configurer("sensor_config.json")
+
 
 
 def get_filename(sensor):
     return sensor + "_" + str(int(time.time()))
-
-
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = "."
 
 
 @app.route("/upload", methods=['POST'])
@@ -179,9 +185,11 @@ def handle_upload():
     return "Recieved"
 
 
-@app.route("/")
-def hello():
-    return "I am the server!"
+@app.route("/configure", methods=['GET'])
+def configure_sensor():
+    config = configurer.get()
+    resp = Response(json.dumps(config), status=200, mimetype='application/json')
+    return resp
 
 
 def main():
