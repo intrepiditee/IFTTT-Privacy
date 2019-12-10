@@ -8,12 +8,10 @@ import json
 def get_config():
     while True:
         try:
-            response = requests.get('http://ifttt_server_1:8080/configure')
+            response = requests.get('http://ifttt_server_1:8080/configure/sensor')
 
             config = json.loads(response.text)
             if response.status_code == 200:
-                print(response)
-                print(response.text)
                 return config
         except requests.exceptions.ConnectionError:
             time.sleep(0.5)
@@ -31,7 +29,14 @@ def main():
         data = random.randrange(min, max)
         encrypt(data, name)
         files = [('file', open(name, 'rb'))]
-        requests.post("http://ifttt_server_1:8080/upload", files=files)
+
+        try:
+            resp = requests.post("http://ifttt_server_1:8080/upload", files=files)
+            if resp.status_code != 200:
+                print("Server returned code " + str(resp.status_code))
+        except requests.exceptions.ConnectionError:
+            print("Failed to post to server")
+
         print("Post!")
         time.sleep(interval)
 
