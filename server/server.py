@@ -140,7 +140,7 @@ class Server():
             return
         files = [('file', open(datapoint, 'rb')) for datapoint in self.switch_to_datapoints[switch]]
 
-        print("post to switch")
+        print("Post to switch")
         requests.post(self.switch_to_address[switch], files=files)
 
     def process_data(self, sensor, value):
