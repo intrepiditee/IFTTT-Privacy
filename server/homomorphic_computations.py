@@ -16,26 +16,24 @@ def cache_bytesio(bio):
 
 def h_sum(*bios):
     filenames = [cache_bytesio(bio) for bio in bios]
-    print(bios)
     args = ["./sealexamples", "4"] + filenames
-    print(args)
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
     b = BytesIO(p.communicate()[0])
     try:
-        map(os.remove, filenames)
+        for filename in filenames:
+            os.remove(filename)
     except:
         print("ERROR: failed removing filenames: [" + ",".join(filenames) + "]")
     return b
 
 def h_diff(*bios):
     filenames = [cache_bytesio(bio) for bio in bios]
-    print(bios)
     args = ["./sealexamples", "1"] + filenames
-    print(args)
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
     b = BytesIO(p.communicate()[0])
     try:
-        map(os.remove, filenames)
+        for filename in filenames:
+            os.remove(filename)
     except:
         print("ERROR: failed removing filenames: [" + ",".join(filenames) + "]")
     return b
