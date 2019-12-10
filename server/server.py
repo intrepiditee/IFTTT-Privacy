@@ -5,6 +5,7 @@ from homomorphic_computations import *
 import json
 import itertools
 import time
+import threading
 import os
 import io
 from configurer import Configurer
@@ -106,9 +107,23 @@ class Server():
             for datapoint in computation.datapoints:
                 self.sensor_to_computations[datapoint].add(computation)
         self.data_cache = DataCache(100)
+
+        self.num_switches = config["num_switches"]
         self.switch_to_address = {}
-        for switch in config["switches"]:
-            self.switch_to_address[switch["name"]] = switch["address"]
+        self.lock = threading.Lock()
+
+
+    def configure_switch_to_address(self, switch, address):
+        self.lock.acquire()
+        self.switch_to_address[switch] = address
+        self.lock.release()
+
+
+    def get_num_switches(self):
+        self.lock.acquire()
+        num = len(self.switch_to_address)
+        self.lock.release()
+        return num
 
     def update_switch(self, switch):
         print("Updating switch", switch, "w/ data", ",".join(self.switch_to_datapoints[switch]))
@@ -161,8 +176,8 @@ app.config['UPLOAD_FOLDER'] = "."
 
 server = Server(load_config())
 
-configurer = Configurer("sensor_config.json")
-
+sensor_configurer = Configurer("sensor_config.json", "sensors")
+switch_configurer = Configurer("switch_config.json", "switches")
 
 
 def get_filename(sensor):
@@ -171,6 +186,10 @@ def get_filename(sensor):
 
 @app.route("/upload", methods=['POST'])
 def handle_upload():
+
+    if server.get_num_switches() != server.num_switches:
+        return Response(json.dumps({"error": "switches not configured yet"}), status=500)
+
     if "file" not in request.files:
         print("ERROR: missing file")
         return Response(json.dumps({"error": "missing file"}), status=400)
@@ -185,10 +204,22 @@ def handle_upload():
     return "Recieved"
 
 
-@app.route("/configure", methods=['GET'])
+@app.route("/configure/sensor", methods=['GET'])
 def configure_sensor():
-    config = configurer.get()
+    config = sensor_configurer.get()
     resp = Response(json.dumps(config), status=200, mimetype='application/json')
+    return resp
+
+
+
+@app.route("/configure/switch", methods=["GET"])
+def configure_switch():
+    config = switch_configurer.get()
+    resp = Response(json.dumps(config), status=200, mimetype='application/json')
+    server.configure_switch_to_address(
+        "switch" + str(server.get_num_switches() + 1),
+        'http://' + request.remote_addr + ':8080/update'
+    )
     return resp
 
 

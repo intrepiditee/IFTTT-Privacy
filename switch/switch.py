@@ -38,6 +38,8 @@ def handle_update():
     rule = RULES[key]
     if rule.evaluate(data):
         print("State changed to " + str(rule.get_output()))
+    else:
+        print("State did not change.")
 
     return Response(status=200)
 
@@ -51,11 +53,6 @@ def handle_rules():
         return Response(json.dumps({'error': 'missing fields'}), status=400)
     finally:
         return Response(status=200)
-
-
-@app.route("/")
-def hello():
-    return "I am a switch!"
 
 
 def add_rules(rules):
@@ -77,14 +74,31 @@ def add_rules(rules):
         RULES[key] = Rule(rule['output'], conditions)
 
 
-def read_rules():
+def configure(config):
     with open("phone_to_switch.json") as f:
         rules = json.load(f)
         add_rules(rules)
 
 
+def get_config():
+    while True:
+        try:
+            response = requests.get('http://ifttt_server_1:8080/configure/switch')
+
+            config = json.loads(response.text)
+            if response.status_code == 200:
+                return config
+        except requests.exceptions.ConnectionError:
+            time.sleep(0.5)
+
 def main():
-    read_rules();
+
+    config = get_config()
+    name = config['name']
+    add_rules(config)
+
+    print(RULES)
+
     app.run(host="0.0.0.0", port=8080)
 
 

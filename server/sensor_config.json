@@ -4,31 +4,31 @@
       "name": "ifttt_sensor_1",
       "min": 60,
       "max": 80,
-      "interval": 5
+      "interval": 2
     },
     {
       "name": "ifttt_sensor_2",
       "min": 60,
       "max": 80,
-      "interval": 10
+      "interval": 4
     },
     {
       "name": "ifttt_sensor_3",
       "min": 60,
       "max": 80,
-      "interval": 15
+      "interval": 6
     },
     {
       "name": "ifttt_sensor_4",
       "min": 0,
       "max": 500,
-      "interval": 20
+      "interval": 2
     },
     {
       "name": "ifttt_sensor_5",
       "min": 300,
       "max": 900,
-      "interval": 25
+      "interval": 4
     }
   ]
 }

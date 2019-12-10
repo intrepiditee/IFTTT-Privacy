@@ -1,0 +1,52 @@
+{
+  "switches": [
+    {
+      "name": "ifttt_switch_1",
+      "rules": [
+        {
+            "output": 1,
+            "conditions": [
+                {
+                    "name": "avg_temp",
+                    "operand": ">",
+                    "value": 200
+                }
+            ]
+        }
+      ]
+    },
+
+    {
+      "name": "ifttt_switch_2",
+      "rules": [
+        {
+            "output": 2,
+            "conditions": [
+                {
+                    "name": "rate_1",
+                    "operand": ">",
+                    "value": 10
+                }
+            ]
+        }
+      ]
+    },
+
+
+    {
+      "name": "ifttt_switch_3",
+      "rules": [
+        {
+            "output": 3,
+            "conditions": [
+                {
+                    "name": "run_sum_2",
+                    "operand": ">",
+                    "value": 420
+                }
+            ]
+        }
+      ]
+    }
+  ]
+}

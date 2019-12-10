@@ -4,11 +4,11 @@ import threading
 
 class Configurer:
 
-    def __init__(self, path):
-        with open("sensor_config.json", "rt") as f:
+    def __init__(self, path, key="sensors"):
+        with open(path, "rt") as f:
             configs = json.load(f)
 
-            self.configs = configs["sensors"]
+            self.configs = configs[key]
             self.index = 0
             self.lock = threading.Lock()
 
