@@ -140,7 +140,6 @@ class Server():
             return
         files = [('file', open(datapoint, 'rb')) for datapoint in self.switch_to_datapoints[switch]]
 
-        print("Post to switch")
         requests.post(self.switch_to_address[switch], files=files)
 
     def process_data(self, sensor, value):
@@ -216,8 +215,9 @@ def configure_sensor():
 def configure_switch():
     config = switch_configurer.get()
     resp = Response(json.dumps(config), status=200, mimetype='application/json')
+    num = str(server.get_num_switches() + 1)
     server.configure_switch_to_address(
-        "switch" + str(server.get_num_switches() + 1),
+        "switch" + num,
         'http://' + request.remote_addr + ':8080/update'
     )
     return resp
